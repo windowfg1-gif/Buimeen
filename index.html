@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Buimeen">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffe9c7">
+<link rel="apple-touch-icon" id="touchIcon" href="">
+<title>Buimeen</title>
+<style>
+  :root{--bg1:#fff1d6;--bg2:#e3f6ec;--card:#ffffff;--text:#3a3550;--muted:#8a849c;--green:#43b97f;--peach:#ffa56b;--grey:#ece8f3;--accent:#ff7a8a;--accent2:#7c6cf0;--warm:#fff6e5}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;min-height:100vh;font-family:"Nunito","Segoe UI",system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;color:var(--text);line-height:1.45;touch-action:manipulation;
+       padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+  .wrap{max-width:520px;margin:0 auto;padding:12px 14px calc(56px + env(safe-area-inset-bottom))}
+  body.locked .wrap{display:none}
+  .card{background:var(--card);border-radius:26px;padding:20px 18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(124,108,240,.10);position:relative}
+  h1{font-size:1.65rem;margin:6px 0 4px;text-align:center}
+  .paws{text-align:center;font-size:1.1rem;letter-spacing:6px;opacity:.7;margin-bottom:12px}
+  h2{font-size:1.12rem;margin:0 0 10px}
+  .hero{text-align:center;background:linear-gradient(180deg,#fffaf0,#f1fbf5);overflow:hidden;padding-top:26px}
+  .dog{display:block;width:min(330px,84%);margin:0 auto;cursor:pointer;user-select:none;-webkit-user-select:none}
+  .dog svg{width:100%;height:auto;display:block;overflow:visible}
+  #gHead{transform-origin:150px 170px;animation:tilt 4.5s ease-in-out infinite}
+  @keyframes tilt{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+  #gTongue{transform-box:fill-box;transform-origin:50% 0%;animation:pant 1.1s ease-in-out infinite}
+  @keyframes pant{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.07)}}
+  .dog.bounce{animation:hop .6s ease 3}
+  @keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+  .name{font-size:1.15rem;font-weight:800;margin-top:6px}
+  .pack{font-size:1.5rem;min-height:1.9rem;margin-top:4px;letter-spacing:2px}
+  .big{font-size:3.6rem;font-weight:800;color:var(--green);line-height:1.1}
+  .big.zero{color:var(--accent2)}
+  .sub{color:var(--muted);font-size:.92rem;margin-top:2px}
+  .msg{margin-top:10px;font-size:1.02rem;font-weight:700}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 8px;text-align:center}
+  .stat{background:#faf7ff;border-radius:16px;padding:10px 2px}
+  .stat b{display:block;font-size:1.4rem;color:var(--accent2)}
+  .stat span{font-size:.74rem;color:var(--muted)}
+  label.chk{display:flex;gap:12px;align-items:center;padding:14px 12px;min-height:58px;border:2px solid var(--grey);border-radius:16px;margin-bottom:8px;cursor:pointer;font-size:1.02rem}
+  label.chk input{width:28px;height:28px;flex:none;accent-color:var(--green)}
+  label.chk small{display:block;color:var(--muted)}
+  .core{border-color:#bfe8d3;background:#f4fcf8}
+  .row{display:flex;gap:10px;align-items:center;margin:12px 0}
+  .row label{min-width:112px;font-size:.94rem}
+  input[type=range]{flex:1;height:34px;accent-color:var(--accent2)}
+  input[type=date],input[type=text],input[type=number],select,textarea{width:100%;padding:12px;border:2px solid var(--grey);border-radius:14px;font:inherit;font-size:16px;background:#fff;color:var(--text);min-height:50px}
+  input[type=text],input[type=number]{margin-bottom:8px}
+  textarea{resize:vertical;min-height:76px}
+  .section-title{font-weight:800;margin:18px 0 6px}
+  button{font:inherit;font-weight:800;border:0;border-radius:16px;padding:13px 18px;min-height:50px;background:linear-gradient(135deg,var(--accent),#ff9a76);color:#fff;cursor:pointer}
+  button:active{transform:scale(.97)}
+  button.sec{background:var(--grey);color:var(--text)}
+  button.danger{background:transparent;color:#d26a6a;padding:4px 8px;min-height:38px;font-weight:700}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cell{aspect-ratio:1;border-radius:50%;background:var(--grey);font-size:.8rem;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-weight:800}
+  .cell.ok{background:var(--green);font-size:1.1rem}
+  .cell.slip{background:var(--peach)}
+  .cell.none{color:var(--muted)}
+  .cell.now{outline:3px solid var(--accent2);outline-offset:1px}
+  .legend{font-size:.8rem;color:var(--muted);margin-top:10px}
+  .hist{border-top:2px dashed var(--grey);padding:10px 0}
+  .hist:first-child{border-top:0}
+  .hist .top{display:flex;justify-content:space-between;align-items:center}
+  .tag{font-size:.76rem;padding:2px 10px;border-radius:20px;color:#fff}
+  .tag.ok{background:var(--green)} .tag.slip{background:var(--peach)}
+  .meta{font-size:.86rem;color:var(--muted)}
+  .note{font-size:.94rem;margin-top:4px;white-space:pre-wrap}
+  .grat{font-size:.96rem;margin-top:4px}
+  .safety{background:var(--warm);font-size:.96rem}
+  .reminder{background:#fff0f2;font-size:.96rem;display:none}
+  .random{background:#f3f0ff;border-radius:14px;padding:12px;margin-top:10px;font-size:.96rem;display:none}
+  .status{margin-top:8px;font-size:.86rem;font-weight:700}
+  .corner{position:absolute;font-size:1.7rem;opacity:.9}
+  details summary{cursor:pointer;font-weight:800;margin-bottom:8px;min-height:34px}
+  .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#3a3550;color:#fff;padding:12px 18px;border-radius:16px;opacity:0;transition:.3s;pointer-events:none;max-width:90%;z-index:20;text-align:center}
+  .toast.show{opacity:1}
+  .conf{position:fixed;top:-50px;font-size:2rem;animation:fall 2.8s ease-in forwards;pointer-events:none;z-index:30}
+  @keyframes fall{to{transform:translateY(115vh) rotate(360deg)}}
+
+  /* ---------- Lock screen ---------- */
+  #lock{position:fixed;top:0;left:0;right:0;bottom:0;z-index:100;background:linear-gradient(160deg,var(--bg1),var(--bg2));
+        display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;
+        padding-top:calc(20px + env(safe-area-inset-top));padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+  #lock.hide{display:none}
+  #lock .face{font-size:4.2rem;line-height:1}
+  #dots{display:flex;gap:16px;justify-content:center;margin:18px 0 8px}
+  #dots i{display:block;width:18px;height:18px;border-radius:50%;border:2px solid var(--accent2)}
+  #dots i.on{background:var(--accent2)}
+  #dots.shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-12px)}40%{transform:translateX(12px)}60%{transform:translateX(-8px)}80%{transform:translateX(8px)}}
+  #lockMsg{min-height:1.4rem;font-weight:700;color:#d26a6a;font-size:.95rem}
+  #pad{display:grid;grid-template-columns:repeat(3,78px);gap:14px;margin-top:14px}
+  #pad button{width:78px;height:78px;min-height:78px;border-radius:50%;padding:0;font-size:1.7rem;background:#fff;color:var(--text);box-shadow:0 3px 10px rgba(124,108,240,.15)}
+  #pad button.blank{visibility:hidden}
+  #pad button.del{background:transparent;box-shadow:none;font-size:1.5rem}
+</style>
+</head>
+<body class="locked">
+
+<!-- Lock screen -->
+<div id="lock">
+  <div class="face">🐶</div>
+  <h1>Buimeen</h1>
+  <div class="sub">Enter your passcode</div>
+  <div id="dots"><i></i><i></i><i></i><i></i></div>
+  <div id="lockMsg"></div>
+  <div id="pad"></div>
+</div>
+
+<div class="wrap">
+  <h1>🐶 Buimeen 🦴</h1>
+  <div class="paws">🐾 🐾 🐾 🐾 🐾</div>
+
+  <div class="card reminder" id="reminder">
+    <b>🦴 Time to save a backup.</b> <span id="reminderText"></span>
+    <div class="btns"><button id="reminderBtn">Save backup now</button></div>
+  </div>
+
+  <div class="card hero">
+    <span class="corner" style="left:14px;top:12px">🦴</span>
+    <span class="corner" style="right:14px;top:12px">🎾</span>
+    <div class="dog" id="dog">
+      <svg id="goldieSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 310" role="img" aria-label="Buimeen the smiling golden retriever">
+        <!-- neck fur -->
+        <path d="M58 188 C46 240 78 282 110 292 L120 278 L132 298 L150 284 L168 298 L180 278 L190 292 C222 282 254 240 242 188 Z" fill="#e1aa57"/>
+        <path d="M104 244 L120 278 L132 298 L150 284 L168 298 L180 278 L196 244 Z" fill="#f7e2b2"/>
+
+        <!-- bandana (7+ days) -->
+        <g id="gBandana" display="none">
+          <path d="M84 222 Q150 262 216 222 L150 300 Z" fill="#e5484d"/>
+          <path d="M84 222 Q150 262 216 222" stroke="#c93338" stroke-width="4" fill="none"/>
+          <circle cx="122" cy="248" r="4" fill="#fff"/><circle cx="178" cy="248" r="4" fill="#fff"/><circle cx="150" cy="274" r="4" fill="#fff"/>
+        </g>
+
+        <g id="gHead">
+          <!-- ears -->
+          <path d="M74 70 C30 64 12 140 34 202 C46 234 82 218 92 170 C100 130 102 90 74 70Z" fill="#c98d3a"/>
+          <path d="M226 70 C270 64 288 140 266 202 C254 234 218 218 208 170 C200 130 198 90 226 70Z" fill="#c98d3a"/>
+          <path d="M60 92 C48 128 48 170 58 198" stroke="#b27726" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M240 92 C252 128 252 170 242 198" stroke="#b27726" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+          <!-- head -->
+          <ellipse cx="150" cy="140" rx="84" ry="86" fill="#eebd6a"/>
+          <!-- cheek fluff -->
+          <path d="M70 160 Q62 176 70 192 Q80 184 84 172Z" fill="#eebd6a"/>
+          <path d="M230 160 Q238 176 230 192 Q220 184 216 172Z" fill="#eebd6a"/>
+          <!-- blaze -->
+          <path d="M150 56 C138 76 140 96 150 108 C160 96 162 76 150 56Z" fill="#f6d98c"/>
+          <!-- head fur lines -->
+          <path d="M96 76 Q108 66 122 74" stroke="#d99a38" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M204 76 Q192 66 178 74" stroke="#d99a38" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+          <!-- muzzle -->
+          <ellipse cx="150" cy="178" rx="48" ry="38" fill="#f9e6b9"/>
+          <!-- blush -->
+          <circle cx="82" cy="164" r="11" fill="#ff8fa0" opacity=".35"/>
+          <circle cx="218" cy="164" r="11" fill="#ff8fa0" opacity=".35"/>
+
+          <!-- happy brows -->
+          <path d="M88 100 Q108 86 128 98" stroke="#b98332" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <path d="M172 98 Q192 86 212 100" stroke="#b98332" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+
+          <!-- BIG eyes -->
+          <ellipse cx="108" cy="128" rx="16" ry="18" fill="#2b1810"/>
+          <ellipse cx="192" cy="128" rx="16" ry="18" fill="#2b1810"/>
+          <circle cx="114" cy="120" r="6.5" fill="#fff"/><circle cx="198" cy="120" r="6.5" fill="#fff"/>
+          <circle cx="102" cy="136" r="3" fill="#fff"/><circle cx="186" cy="136" r="3" fill="#fff"/>
+          <!-- smiling lower lids -->
+          <path d="M88 150 Q108 130 128 150 Q108 154 88 150Z" fill="#eebd6a"/>
+          <path d="M172 150 Q192 130 212 150 Q192 154 172 150Z" fill="#eebd6a"/>
+          <path d="M90 148 Q108 133 126 148" stroke="#d99a38" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M174 148 Q192 133 210 148" stroke="#d99a38" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+          <!-- mouth (wide open smile) -->
+          <path d="M106 186 Q150 200 194 186 Q192 240 150 242 Q108 240 106 186Z" fill="#7d2c33"/>
+          <!-- tongue -->
+          <g id="gTongue">
+            <path d="M126 212 Q150 270 174 212 Q150 202 126 212Z" fill="#f3909f"/>
+            <path d="M150 214 L150 242" stroke="#d9707f" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+          <!-- smile corners -->
+          <path d="M106 186 Q94 186 90 172" stroke="#3a2414" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M194 186 Q206 186 210 172" stroke="#3a2414" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+          <!-- nose -->
+          <path d="M126 152 Q150 138 174 152 Q172 174 150 178 Q128 174 126 152Z" fill="#2a1a14"/>
+          <ellipse cx="138" cy="152" rx="8" ry="3" fill="#fff" opacity=".35"/>
+          <path d="M150 178 L150 190" stroke="#2a1a14" stroke-width="3.5" stroke-linecap="round"/>
+
+          <!-- crown (30+ days) -->
+          <g id="gCrown" display="none">
+            <path d="M108 66 L116 26 L134 50 L150 16 L166 50 L184 26 L192 66 Z" fill="#ffd23f" stroke="#e0a800" stroke-width="3" stroke-linejoin="round"/>
+            <circle cx="150" cy="32" r="4.5" fill="#ff7a8a"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="name">Buimeen 🐾</div>
+    <div class="pack" id="pack"></div>
+    <div id="streak" class="big">0</div>
+    <div class="sub">days in a row</div>
+    <div id="message" class="msg"></div>
+    <div id="next" class="sub"></div>
+  </div>
+
+  <div class="card stats">
+    <div class="stat"><b id="total">0</b><span>🦴 on-track days</span></div>
+    <div class="stat"><b id="longest">0</b><span>🏆 best streak</span></div>
+    <div class="stat"><b id="logged">0</b><span>📅 days logged</span></div>
+    <div class="stat"><b id="actionDays">0</b><span>🐕‍🦺 self-care days</span></div>
+    <div class="stat"><b id="actionStreak">0</b><span>🔥 self-care streak</span></div>
+    <div class="stat"><b id="gratDays">0</b><span>💛 gratitude days</span></div>
+  </div>
+
+  <div class="card">
+    <h2>🐕 Today's check-in</h2>
+    <input type="date" id="date">
+
+    <div style="margin-top:12px">
+      <label class="chk core"><input type="checkbox" id="p1"> <div id="l1">☀️ Sky</div></label>
+      <label class="chk core"><input type="checkbox" id="p2"> <div id="l2">💧 Water</div></label>
+      <label class="chk core"><input type="checkbox" id="p3"> <div id="l3">🌙 Night</div></label>
+      <div class="meta" style="margin:6px 0 12px">All three ticked = an on-track day 🦴</div>
+
+      <label class="chk"><input type="checkbox" id="meds"> <div>Took my daily care<small>Meds, if prescribed</small></div></label>
+      <label class="chk"><input type="checkbox" id="ate"> <div>Ate regular meals 🍲</div></label>
+      <label class="chk"><input type="checkbox" id="slept"> <div>Rested reasonably well 😴</div></label>
+    </div>
+
+    <div class="section-title">🐕‍🦺 One kind thing I did for myself</div>
+    <select id="actionType">
+      <option value="">Nothing yet today</option>
+      <option>Meeting</option>
+      <option>Counselling / therapy</option>
+      <option>Reading</option>
+      <option>Podcast / audio</option>
+      <option>Walk</option>
+      <option>Other</option>
+    </select>
+    <div class="meta" style="margin:6px 0">Small counts: 10 minutes of a podcast, one page of a book, a short walk with Buimeen.</div>
+    <input type="text" id="actionNote" placeholder="What was it?">
+
+    <div class="section-title">💛 3 things I'm grateful for</div>
+    <div class="meta" style="margin-bottom:6px">Numb is fine. Tiny things count: a warm meal, a friend's text, a bed, a wagging tail.</div>
+    <input type="text" id="g1" placeholder="1.">
+    <input type="text" id="g2" placeholder="2.">
+    <input type="text" id="g3" placeholder="3.">
+
+    <div class="row"><label>🌊 Urge: <b id="cravVal">0</b>/10</label><input type="range" id="craving" min="0" max="10" value="0"></div>
+    <div class="row"><label>🎭 Mood: <b id="moodVal">3</b>/5</label><input type="range" id="mood" min="1" max="5" value="3"></div>
+    <div class="meta" style="margin:-4px 0 8px">1 = very low · 3 = steady · 5 = very high or wired</div>
+
+    <textarea id="note" placeholder="Notes (what helped, who I talked to)..."></textarea>
+
+    <div class="btns">
+      <button id="save">Save today 🐶</button>
+      <button class="sec" id="clear">Clear this day</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🐾 Last 5 weeks</h2>
+    <div class="cal" id="cal"></div>
+    <div class="legend">🐾 = on track · Orange = tough day (not zero!) · Grey = not logged. Tap a day to edit.</div>
+  </div>
+
+  <div class="card">
+    <h2>💛 Gratitude journal</h2>
+    <div class="meta">On a numb day, old entries are proof that good things happened.</div>
+    <div class="btns">
+      <button class="sec" id="randomBtn">Show me a past one</button>
+      <button class="sec" id="exportTxt">Export as text</button>
+    </div>
+    <div class="random" id="randomBox"></div>
+    <details style="margin-top:12px">
+      <summary>See all entries</summary>
+      <div id="gratList"></div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>📖 History</h2>
+    <div id="history"></div>
+  </div>
+
+  <div class="card">
+    <h2>🦴 Keep my count safe</h2>
+    <div class="meta">Your days are saved in two places on this phone. Still, save a backup to Files, Drive or email once a week.</div>
+    <div class="meta" id="lastBackup" style="margin-top:6px"></div>
+    <div class="status" id="storageStatus"></div>
+    <div class="btns">
+      <button id="shareBtn">Save backup</button>
+      <button class="sec" id="copyBtn">Copy backup text</button>
+      <button class="sec" id="importBtn">Restore from file</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+    <details style="margin-top:12px">
+      <summary>Restore from pasted text</summary>
+      <textarea id="pasteBox" placeholder="Paste your backup text here"></textarea>
+      <div class="btns"><button class="sec" id="pasteBtn">Restore</button><button class="sec" id="exportCsv">Export CSV</button></div>
+    </details>
+    <details style="margin-top:12px">
+      <summary>🐕 My count looks wrong</summary>
+      <div class="meta" style="margin-bottom:8px">Type how many days in a row you had up to yesterday. Only empty days get filled in. Days you already logged stay as they are.</div>
+      <input type="number" id="fixCount" min="1" max="2000" inputmode="numeric" placeholder="e.g. 12">
+      <button class="sec" id="fixBtn">Fill in my days</button>
+    </details>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary>🏷️ My own labels</summary>
+      <div class="meta" style="margin-bottom:8px">Rename the three boxes to words only you understand.</div>
+      <input type="text" id="n1"><input type="text" id="n2"><input type="text" id="n3">
+      <button id="saveLabels">Save labels</button>
+    </details>
+  </div>
+
+  <div class="card safety">
+    <details>
+      <summary>🐕‍🦺 If today feels heavy</summary>
+      You don't have to carry it alone. Go to an ER or get someone physically next to you, and put anything that could hurt you out of reach. Buimeen would stay right by your side, so find your person too. 🐾
+    </details>
+  </div>
+
+  <div class="btns" style="justify-content:center;margin-bottom:14px">
+    <button class="sec" id="lockBtn">🔒 Lock now</button>
+  </div>
+
+  <div class="paws">🦮 🐕 🐶 🐕‍🦺 🦮</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- Passcode lock ---------- */
+const PASSCODE = '1108';   // change these 4 digits to change your passcode
+(function () {
+  const lock = document.getElementById('lock');
+  const dotsBox = document.getElementById('dots');
+  const dots = Array.from(dotsBox.querySelectorAll('i'));
+  const msg = document.getElementById('lockMsg');
+  const pad = document.getElementById('pad');
+  let entered = '';
+  let hiddenAt = 0;
+
+  function paint() { dots.forEach((d, i) => d.classList.toggle('on', i < entered.length)); }
+
+  function openUp() {
+    entered = ''; paint(); msg.textContent = '';
+    lock.classList.add('hide');
+    document.body.classList.remove('locked');
+  }
+  function lockNow() {
+    entered = ''; paint(); msg.textContent = '';
+    lock.classList.remove('hide');
+    document.body.classList.add('locked');
+    window.scrollTo(0, 0);
+  }
+  window.lockNow = lockNow;
+
+  function press(k) {
+    if (lock.classList.contains('hide')) return;
+    if (k === 'del') { entered = entered.slice(0, -1); paint(); return; }
+    if (entered.length >= 4) return;
+    entered += k; paint();
+    if (entered.length === 4) {
+      if (entered === PASSCODE) {
+        setTimeout(openUp, 150);
+      } else {
+        msg.textContent = 'Not quite. Try again 🐾';
+        dotsBox.classList.remove('shake'); void dotsBox.offsetWidth; dotsBox.classList.add('shake');
+        setTimeout(() => { entered = ''; paint(); }, 450);
+      }
+    }
+  }
+
+  ['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k => {
+    const b = document.createElement('button');
+    if (k === '') { b.className = 'blank'; b.disabled = true; }
+    else if (k === 'del') { b.className = 'del'; b.textContent = '⌫'; b.onclick = () => press('del'); }
+    else { b.textContent = k; b.onclick = () => press(k); }
+    pad.appendChild(b);
+  });
+
+  // keyboard support (computer)
+  document.addEventListener('keydown', e => {
+    if (lock.classList.contains('hide')) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('del');
+  });
+
+  // lock again if the app was away for more than 30 seconds
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) hiddenAt = Date.now();
+    else if (hiddenAt && Date.now() - hiddenAt > 30000) lockNow();
+  });
+})();
+
+/* ---------- App ---------- */
+const KEY = 'dailyCheckinData_v1';       // same key as before: old entries are kept
+const META_KEY = 'dailyCheckinMeta_v1';
+const DEFAULT_LABELS = {p1:'☀️ Sky', p2:'💧 Water', p3:'🌙 Night'};
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today = () => fmt(new Date());
+const addDays = (s, n) => { const d = new Date(s + 'T12:00:00'); d.setDate(d.getDate() + n); return fmt(d); };
+
+/* ---------- Safe storage: localStorage + IndexedDB (two copies) ---------- */
+const readJSON = k => { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } };
+
+const idb = {
+  open() {
+    return new Promise((res, rej) => {
+      try {
+        const r = indexedDB.open('pupDB', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('kv');
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => rej(r.error);
+      } catch (e) { rej(e); }
+    });
+  },
+  async get(k) {
+    try {
+      const db = await this.open();
+      return await new Promise(res => {
+        const q = db.transaction('kv').objectStore('kv').get(k);
+        q.onsuccess = () => res(q.result);
+        q.onerror = () => res(undefined);
+      });
+    } catch (e) { return undefined; }
+  },
+  async set(k, v) {
+    try {
+      const db = await this.open();
+      db.transaction('kv', 'readwrite').objectStore('kv').put(v, k);
+    } catch (e) {}
+  }
+};
+
+// Convert older entries to neutral field names
+function migrate(obj) {
+  Object.keys(obj).forEach(d => {
+    const e = obj[d];
+    if (e && typeof e === 'object' && ('meth' in e || 'alcohol' in e || 'triggers' in e)) {
+      e.p1 = !!e.meth; e.p2 = !!e.alcohol; e.p3 = !!e.triggers;
+      delete e.meth; delete e.alcohol; delete e.triggers;
+    }
+  });
+  return obj;
+}
+let data = migrate(readJSON(KEY));
+let meta = readJSON(META_KEY);
+
+// Drop old saved labels that still use the old wording, so the new names show
+if (meta.labels && Object.values(meta.labels).some(v => /promise/i.test(v))) delete meta.labels;
+
+const labels = () => Object.assign({}, DEFAULT_LABELS, meta.labels || {});
+const persist = () => {
+  try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+  idb.set('data', JSON.stringify(data));
+};
+const persistMeta = () => {
+  try { localStorage.setItem(META_KEY, JSON.stringify(meta)); } catch (e) {}
+  idb.set('meta', JSON.stringify(meta));
+};
+persist(); persistMeta();
+
+// If the browser wiped one copy, bring missing days back from the other
+async function recover() {
+  const raw = await idb.get('data');
+  if (!raw) return;
+  let copy; try { copy = migrate(JSON.parse(raw)); } catch (e) { return; }
+  let n = 0;
+  Object.keys(copy).forEach(d => { if (!data[d]) { data[d] = copy[d]; n++; } });
+  const rawMeta = await idb.get('meta');
+  if (rawMeta) {
+    try {
+      const m = JSON.parse(rawMeta);
+      if (!meta.lastExport && m.lastExport) meta.lastExport = m.lastExport;
+      if (!meta.labels && m.labels && !Object.values(m.labels).some(v => /promise/i.test(v))) meta.labels = m.labels;
+    } catch (e) {}
+  }
+  if (n) { persist(); persistMeta(); applyLabels(); loadForm($('date').value || today()); render(); toast(`🐕 Found ${n} saved day${n > 1 ? 's' : ''} and brought them back.`); }
+}
+
+const toast = t => { const el = $('toast'); el.textContent = t; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 3200); };
+const isSober = e => e && e.p1 && e.p2 && e.p3;
+const hasAction = e => e && e.action && e.action.type;
+const gratList = e => (e && Array.isArray(e.gratitude) ? e.gratitude.filter(x => x && x.trim()) : []);
+
+async function showStorage() {
+  let ok = false;
+  try {
+    if (navigator.storage && navigator.storage.persist) {
+      ok = await navigator.storage.persisted();
+      if (!ok) ok = await navigator.storage.persist();
+    }
+  } catch (e) {}
+  const el = $('storageStatus');
+  const standalone = window.navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+  if (ok || standalone) { el.textContent = '✅ This phone is set to keep your days safe.'; el.style.color = '#2a8a5a'; }
+  else { el.textContent = '⚠️ Tap Share → "Add to Home Screen" so your phone keeps your days.'; el.style.color = '#c0703a'; }
+}
+
+/* ---------- Home-screen icon: Buimeen's face ---------- */
+(function makeIcon() {
+  try {
+    const clone = $('goldieSvg').cloneNode(true);
+    ['gBandana', 'gCrown'].forEach(id => { const n = clone.querySelector('#' + id); if (n) n.remove(); });
+    clone.setAttribute('viewBox', '0 10 300 290');
+    clone.setAttribute('width', '300'); clone.setAttribute('height', '290');
+    const svgText = new XMLSerializer().serializeToString(clone);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas'); c.width = c.height = 180;
+        const x = c.getContext('2d');
+        x.fillStyle = '#ffe9c7'; x.fillRect(0, 0, 180, 180);
+        x.drawImage(img, 10, 12, 160, 155);
+        const url = c.toDataURL('image/png');
+        $('touchIcon').href = url;
+        const mf = { name: 'Buimeen', short_name: 'Buimeen', display: 'standalone', background_color: '#ffe9c7', theme_color: '#ffe9c7',
+          icons: [{ src: url, sizes: '180x180', type: 'image/png' }] };
+        const l = document.createElement('link'); l.rel = 'manifest';
+        l.href = URL.createObjectURL(new Blob([JSON.stringify(mf)], {type: 'application/manifest+json'}));
+        document.head.appendChild(l);
+      } catch (e) {}
+    };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
+  } catch (e) {}
+})();
+
+function bounce() {
+  const d = $('dog'); d.classList.remove('bounce'); void d.offsetWidth;
+  d.classList.add('bounce'); setTimeout(() => d.classList.remove('bounce'), 2000);
+}
+$('dog').onclick = () => { bounce(); toast('Woof! 🐶'); };
+
+function confetti() {
+  const em = ['🐶','🦮','🐕','🐩','🐕‍🦺','🦴','🎾','💛'];
+  for (let i = 0; i < 24; i++) {
+    const s = document.createElement('span'); s.className = 'conf';
+    s.textContent = em[i % em.length];
+    s.style.left = Math.random() * 90 + 'vw';
+    s.style.animationDelay = (Math.random() * .7) + 's';
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 4000);
+  }
+  bounce();
+}
+
+function streakOf(test) {
+  let d = today();
+  if (!test(data[d])) d = addDays(d, -1);
+  let n = 0;
+  while (test(data[d])) { n++; d = addDays(d, -1); }
+  return n;
+}
+function longestStreak() {
+  const dates = Object.keys(data).sort();
+  let best = 0, run = 0, prev = null;
+  for (const d of dates) {
+    if (isSober(data[d])) {
+      run = (prev && addDays(prev, 1) === d) ? run + 1 : 1;
+      best = Math.max(best, run); prev = d;
+    } else { run = 0; prev = null; }
+  }
+  return best;
+}
+const currentStreak = () => streakOf(isSober);
+const crown = s => s >= 90 ? ' 🏆' : '';
+
+function applyLabels() {
+  const L = labels();
+  ['p1','p2','p3'].forEach((k, i) => { $('l' + (i+1)).textContent = L[k]; $('n' + (i+1)).value = L[k]; });
+}
+
+function loadForm(date) {
+  const e = data[date] || {};
+  $('date').value = date;
+  ['p1','p2','p3','meds','ate','slept'].forEach(k => $(k).checked = !!e[k]);
+  $('craving').value = e.craving ?? 0;
+  $('mood').value = e.mood ?? 3;
+  $('note').value = e.note || '';
+  $('actionType').value = (e.action && e.action.type) || '';
+  $('actionNote').value = (e.action && e.action.note) || '';
+  const g = Array.isArray(e.gratitude) ? e.gratitude : [];
+  $('g1').value = g[0] || ''; $('g2').value = g[1] || ''; $('g3').value = g[2] || '';
+  $('cravVal').textContent = $('craving').value;
+  $('moodVal').textContent = $('mood').value;
+}
+
+function gratBlock(e) {
+  const items = gratList(e);
+  if (!items.length) return null;
+  const box = document.createElement('div'); box.className = 'grat';
+  items.forEach(t => { const r = document.createElement('div'); r.textContent = `🐾 ${t}`; box.appendChild(r); });
+  return box;
+}
+
+function render() {
+  const s = currentStreak();
+  $('streak').textContent = s;
+  $('streak').classList.toggle('zero', s === 0);
+  $('gBandana').setAttribute('display', s >= 7 ? 'inline' : 'none');
+  $('gCrown').setAttribute('display', s >= 30 ? 'inline' : 'none');
+  $('pack').textContent = s === 0 ? '🦴' : '🦮'.repeat(Math.min(s, 7)) + (s > 7 ? ' +' + (s - 7) : '') + crown(s);
+
+  const t = today();
+  let msg;
+  if (data[t] && !isSober(data[t])) msg = 'Tough day, and that is okay 🧡 It is not zero. Buimeen is still with you. Tell one person, eat, rest, and start fresh tomorrow.';
+  else if (s === 0) msg = 'Day 1 🐶 Buimeen is so happy you are here. Showing up is the whole job today.';
+  else if (data[t]) msg = 'Today is logged. Buimeen is proud of you 🐶';
+  else msg = 'Check in when your day is done 🐶';
+  $('message').textContent = msg;
+
+  const miles = [1,3,7,14,30,60,90,180,365,730];
+  const nx = miles.find(m => m > s);
+  $('next').textContent = nx ? `🎯 Next milestone: ${nx} days (${nx - s} to go)` + (nx === 7 ? ' · Buimeen gets a bandana' : nx === 30 ? ' · Buimeen gets a crown' : '') : '🏆 All milestones reached';
+
+  const all = Object.values(data);
+  $('total').textContent = all.filter(isSober).length;
+  $('longest').textContent = longestStreak();
+  $('logged').textContent = all.length;
+  $('actionDays').textContent = all.filter(hasAction).length;
+  $('actionStreak').textContent = streakOf(hasAction);
+  $('gratDays').textContent = all.filter(e => gratList(e).length).length;
+
+  const cal = $('cal'); cal.innerHTML = '';
+  for (let i = 34; i >= 0; i--) {
+    const d = addDays(t, -i);
+    const c = document.createElement('div');
+    c.className = 'cell ' + (data[d] ? (isSober(data[d]) ? 'ok' : 'slip') : 'none') + (i === 0 ? ' now' : '');
+    c.textContent = (data[d] && isSober(data[d])) ? '🐾' : Number(d.slice(8));
+    c.title = d;
+    c.onclick = () => { loadForm(d); window.scrollTo({top: 0, behavior: 'smooth'}); };
+    cal.appendChild(c);
+  }
+
+  const gl = $('gratList'); gl.innerHTML = '';
+  const gDates = Object.keys(data).filter(d => gratList(data[d]).length).sort().reverse();
+  if (!gDates.length) gl.textContent = 'No gratitude entries yet.';
+  gDates.forEach(d => {
+    const div = document.createElement('div'); div.className = 'hist';
+    const b = document.createElement('b'); b.textContent = d;
+    div.append(b, gratBlock(data[d]));
+    gl.appendChild(div);
+  });
+
+  const L = labels();
+  const h = $('history'); h.innerHTML = '';
+  const dates = Object.keys(data).sort().reverse();
+  if (!dates.length) h.textContent = 'No entries yet. Your first check-in gives Buimeen a first treat 🦴';
+  dates.forEach(d => {
+    const e = data[d];
+    const div = document.createElement('div'); div.className = 'hist';
+    const top = document.createElement('div'); top.className = 'top';
+    const left = document.createElement('div');
+    const b = document.createElement('b'); b.textContent = d + ' ';
+    const tag = document.createElement('span');
+    tag.className = 'tag ' + (isSober(e) ? 'ok' : 'slip');
+    tag.textContent = isSober(e) ? '🐾 On track' : 'Tough day';
+    left.append(b, tag);
+    const del = document.createElement('button'); del.className = 'danger'; del.textContent = 'Delete';
+    del.onclick = () => { if (confirm('Delete ' + d + '?')) { delete data[d]; persist(); loadForm($('date').value); render(); } };
+    top.append(left, del);
+    const m = document.createElement('div'); m.className = 'meta';
+    const missed = ['p1','p2','p3'].filter(k => !e[k]).map(k => L[k].replace(/^🌟\s*/, ''));
+    m.textContent = `Urge ${e.craving ?? '–'}/10 · Mood ${e.mood ?? '–'}/5 · Care ${e.meds ? '✓' : '–'} · Meals ${e.ate ? '✓' : '–'} · Rest ${e.slept ? '✓' : '–'}` + (missed.length ? ` · Missed: ${missed.join(', ')}` : '');
+    div.append(top, m);
+    if (hasAction(e)) {
+      const a = document.createElement('div'); a.className = 'meta';
+      a.textContent = `🐕‍🦺 ${e.action.type}` + (e.action.note ? ` - ${e.action.note}` : '');
+      div.appendChild(a);
+    }
+    const g = gratBlock(e); if (g) div.appendChild(g);
+    if (e.note) { const n = document.createElement('div'); n.className = 'note'; n.textContent = e.note; div.appendChild(n); }
+    h.appendChild(div);
+  });
+
+  const last = meta.lastExport ? new Date(meta.lastExport) : null;
+  $('lastBackup').textContent = last ? `Last backup: ${fmt(last)}` : 'No backup saved yet.';
+  const days = last ? Math.floor((Date.now() - last.getTime()) / 86400000) : null;
+  const need = Object.keys(data).length > 0 && (days === null || days >= 7);
+  $('reminder').style.display = need ? 'block' : 'none';
+  $('reminderText').textContent = days === null ? 'You have records but no backup yet.' : `Your last backup was ${days} days ago.`;
+}
+
+$('craving').oninput = () => $('cravVal').textContent = $('craving').value;
+$('mood').oninput = () => $('moodVal').textContent = $('mood').value;
+$('date').onchange = () => loadForm($('date').value || today());
+$('lockBtn').onclick = () => window.lockNow();
+
+$('save').onclick = () => {
+  const d = $('date').value || today();
+  if (d > today()) return toast('You can’t log a future date.');
+  data[d] = {
+    p1: $('p1').checked, p2: $('p2').checked, p3: $('p3').checked,
+    meds: $('meds').checked, ate: $('ate').checked, slept: $('slept').checked,
+    craving: Number($('craving').value), mood: Number($('mood').value),
+    action: { type: $('actionType').value, note: $('actionNote').value.trim() },
+    gratitude: [$('g1').value.trim(), $('g2').value.trim(), $('g3').value.trim()],
+    note: $('note').value.trim()
+  };
+  persist(); render();
+  if (isSober(data[d])) { confetti(); toast('Saved! Buimeen is doing zoomies 🐶'); }
+  else toast('Saved 🧡 A tough day is not zero. Tell someone today.');
+};
+$('clear').onclick = () => {
+  const d = $('date').value;
+  if (data[d] && confirm('Clear ' + d + '?')) { delete data[d]; persist(); loadForm(d); render(); }
+};
+$('saveLabels').onclick = () => {
+  meta.labels = { p1: $('n1').value.trim() || DEFAULT_LABELS.p1, p2: $('n2').value.trim() || DEFAULT_LABELS.p2, p3: $('n3').value.trim() || DEFAULT_LABELS.p3 };
+  persistMeta(); applyLabels(); render(); toast('Labels saved.');
+};
+
+$('fixBtn').onclick = () => {
+  const n = Math.min(2000, Math.floor(Number($('fixCount').value)));
+  if (!n || n < 1) return toast('Type a number of days first.');
+  let added = 0;
+  for (let i = 1; i <= n; i++) {
+    const d = addDays(today(), -i);
+    if (!data[d]) {
+      data[d] = { p1: true, p2: true, p3: true, meds: false, ate: false, slept: false, craving: 0, mood: 3,
+        action: { type: '', note: '' }, gratitude: ['', '', ''], note: 'Restored count' };
+      added++;
+    }
+  }
+  persist(); render(); $('fixCount').value = '';
+  toast(added ? `🐕 Filled in ${added} day${added > 1 ? 's' : ''}.` : 'Those days were already logged.');
+};
+
+$('randomBtn').onclick = () => {
+  const ds = Object.keys(data).filter(d => gratList(data[d]).length);
+  const box = $('randomBox');
+  if (!ds.length) { toast('Nothing saved yet. Add your first three today.'); return; }
+  const d = ds[Math.floor(Math.random() * ds.length)];
+  box.innerHTML = '';
+  const b = document.createElement('b'); b.textContent = d;
+  box.append(b, gratBlock(data[d]));
+  box.style.display = 'block';
+};
+
+function download(name, text, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], {type}));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function markBackup() { meta.lastExport = new Date().toISOString(); persistMeta(); render(); }
+async function doBackup() {
+  const text = JSON.stringify(data, null, 2);
+  const name = `buimeen-backup-${today()}.json`;
+  try {
+    const file = new File([text], name, {type: 'application/json'});
+    if (navigator.canShare && navigator.canShare({files: [file]})) {
+      await navigator.share({files: [file], title: 'Buimeen backup'});
+      markBackup(); toast('Backup saved 🦴'); return;
+    }
+  } catch (err) { if (err && err.name === 'AbortError') return; }
+  download(name, text, 'application/json');
+  markBackup(); toast('Backup downloaded. Move it to Files, Drive or email.');
+}
+$('shareBtn').onclick = doBackup;
+$('reminderBtn').onclick = doBackup;
+$('copyBtn').onclick = async () => {
+  const text = JSON.stringify(data);
+  try { await navigator.clipboard.writeText(text); markBackup(); toast('Copied. Paste it into a note or email.'); }
+  catch { prompt('Copy this text:', text); }
+};
+
+function importObj(obj) {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) throw 0;
+  data = Object.assign({}, data, migrate(obj));
+  persist(); loadForm(today()); render(); toast('Backup restored 🐕');
+}
+$('importBtn').onclick = () => $('importFile').click();
+$('importFile').onchange = ev => {
+  const f = ev.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { try { importObj(JSON.parse(r.result)); } catch { toast('That file could not be read.'); } };
+  r.readAsText(f);
+};
+$('pasteBtn').onclick = () => {
+  try { importObj(JSON.parse($('pasteBox').value)); $('pasteBox').value = ''; }
+  catch { toast('That text could not be read.'); }
+};
+
+$('exportCsv').onclick = () => {
+  const q = s => '"' + String(s ?? '').replace(/"/g, '""') + '"';
+  const rows = [['date','on_track','a','b','c','care','meals','rest','urge','mood','selfcare_type','selfcare_note','gratitude_1','gratitude_2','gratitude_3','note']];
+  Object.keys(data).sort().forEach(d => {
+    const e = data[d]; const g = e.gratitude || [];
+    rows.push([d, !!isSober(e), !!e.p1, !!e.p2, !!e.p3, !!e.meds, !!e.ate, !!e.slept, e.craving, e.mood,
+      q(e.action && e.action.type), q(e.action && e.action.note), q(g[0]), q(g[1]), q(g[2]), q(e.note)]);
+  });
+  download(`buimeen-${today()}.csv`, rows.map(r => r.join(',')).join('\n'), 'text/csv');
+};
+$('exportTxt').onclick = () => {
+  const lines = ['My gratitude journal', ''];
+  Object.keys(data).filter(d => gratList(data[d]).length).sort().forEach(d => {
+    lines.push(d); gratList(data[d]).forEach((t, i) => lines.push(`  ${i+1}. ${t}`)); lines.push('');
+  });
+  download(`gratitude-${today()}.txt`, lines.join('\n'), 'text/plain');
+};
+
+// Refresh when the app is reopened (so "today" is always right)
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) { if (!$('date').value || $('date').value > today()) loadForm(today()); render(); }
+});
+
+applyLabels();
+loadForm(today());
+render();
+recover();
+showStorage();
+</script>
+</body>
+</html>
